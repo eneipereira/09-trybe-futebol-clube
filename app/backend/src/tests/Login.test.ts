@@ -25,5 +25,14 @@ describe('routes/Login', () => {
       expect(res.status).to.deep.equal(200);
       expect(res.body).to.contain.keys('token');
     })
+
+    it('deve retornar 400 caso o login não contenha o campo email', async () => {
+      const res = await chai.request(app)
+        .post('/login')
+        .send({password: bodyUser.password})
+
+      expect(res.status).to.deep.equal(400);
+      expect(res.body).to.have.property('message', 'All fields must be filled');
+    })
   })
 })
