@@ -1,9 +1,10 @@
 import { sign, SignOptions } from 'jsonwebtoken';
 import Joi = require('joi');
-import { Login, TUser } from '../types';
+import { compare } from 'bcryptjs';
+import { DbUser, Login, TUser } from '../types';
 import User from '../database/models/User.model';
 import runSchema from './runSchema';
-import UserNotFound from '../errors/UserNotFound';
+import UnauthorizedError from '../errors/UnauthorizedError';
 
 const secret = process.env.JWT_SECRET || 'jwt_secret';
 
@@ -26,23 +27,25 @@ export default class UserService {
       expiresIn: '8h',
     };
 
-    const payload = { data };
-
-    const token = sign(payload, secret, jwtConfig);
+    const token = sign(data, secret, jwtConfig);
 
     return token;
   }
 
-  static async getByEmail(email: string): Promise<TUser> {
+  static async getByEmail(email: string): Promise<DbUser> {
     const user = await User.findOne({
       where: { email },
       raw: true,
     }) as User;
 
-    if (!user) throw new UserNotFound();
+    if (!user) throw new UnauthorizedError();
 
-    const { password, ...userData } = user;
+    return user as DbUser;
+  }
 
-    return userData as TUser;
+  static async verifyPassword(password: string, hashPassword: string): Promise<void> {
+    const isValid = await compare(password, hashPassword);
+
+    if (!isValid) throw new UnauthorizedError();
   }
 }

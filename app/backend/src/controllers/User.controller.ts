@@ -8,6 +8,8 @@ export default class UserController {
 
     const user = await UserService.getByEmail(body.email);
 
+    await UserService.verifyPassword(body.password, user.password);
+
     const token = await UserService.makeToken(user);
 
     res.status(StatusCodes.OK).json({ token });
