@@ -1,4 +1,4 @@
-import { sign, SignOptions } from 'jsonwebtoken';
+import { JsonWebTokenError, sign, SignOptions, verify } from 'jsonwebtoken';
 import Joi = require('joi');
 import { compare } from 'bcryptjs';
 import { DbUser, Login, TUser } from '../types';
@@ -30,6 +30,21 @@ export default class UserService {
     const token = sign(data, secret, jwtConfig);
 
     return token;
+  }
+
+  static async readToken(token: string | undefined): Promise<DbUser> {
+    if (!token) {
+      throw new JsonWebTokenError('Token not found');
+    }
+
+    const payload = verify(token, secret, (err, decoded) => {
+      if (err && (err.message.includes('invalid') || err.message.includes('malformed'))) {
+        throw new JsonWebTokenError('Invalid token');
+      }
+      return decoded;
+    });
+
+    return payload as unknown as DbUser;
   }
 
   static async getByEmail(email: string): Promise<DbUser> {

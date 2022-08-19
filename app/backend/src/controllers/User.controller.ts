@@ -14,4 +14,10 @@ export default class UserController {
 
     res.status(StatusCodes.OK).json({ token });
   }
+
+  static async validate(req: Request, res: Response) {
+    const { role } = await UserService.readToken(req.headers.authorization);
+
+    res.status(StatusCodes.OK).json({ role });
+  }
 }
