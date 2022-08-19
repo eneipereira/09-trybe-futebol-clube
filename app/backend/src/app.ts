@@ -1,4 +1,5 @@
 import * as express from 'express';
+import loginRoute from './routes/Login.route';
 
 class App {
   public app: express.Express;
@@ -7,9 +8,10 @@ class App {
     this.app = express();
 
     this.config();
+    this.routes();
 
     // Não remover essa rota
-    this.app.get('/', (req, res) => res.json({ ok: true }));
+    this.app.get('/', (_req, res) => res.json({ ok: true }));
   }
 
   private config():void {
@@ -22,6 +24,10 @@ class App {
 
     this.app.use(express.json());
     this.app.use(accessControl);
+  }
+
+  private routes():void {
+    this.app.use('/login', loginRoute);
   }
 
   public start(PORT: string | number):void {
