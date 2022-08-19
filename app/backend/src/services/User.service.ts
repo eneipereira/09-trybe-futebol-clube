@@ -1,10 +1,24 @@
 import { sign, SignOptions } from 'jsonwebtoken';
-import { TUser } from '../types';
+import Joi = require('joi');
+import { Login, TUser } from '../types';
 import User from '../database/models/User.model';
+import runSchema from './runSchema';
 
 const secret = process.env.JWT_SECRET || 'jwt_secret';
 
 export default class UserService {
+  static async validateBodyLogin(body: Login): Promise<Login> {
+    const result = runSchema(Joi.object<Login>({
+      email: Joi.string().required().email(),
+      password: Joi.string().required().min(6),
+    }).messages({
+      'any.required': 'All fields must be filled',
+      'string.empty': 'All fields must be filled',
+    }))(body);
+
+    return result;
+  }
+
   static async makeToken(data: TUser) {
     const jwtConfig: SignOptions = {
       algorithm: 'HS256',

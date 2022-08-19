@@ -4,9 +4,9 @@ import UserService from '../services/User.service';
 
 export default class UserController {
   static async login(req: Request, res: Response) {
-    const { email } = req.body;
+    const body = await UserService.validateBodyLogin(req.body);
 
-    const user = await UserService.findOne(email);
+    const user = await UserService.findOne(body.email);
 
     const token = await UserService.makeToken(user);
 

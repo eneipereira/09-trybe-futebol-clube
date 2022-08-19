@@ -10,3 +10,5 @@ export type DbUser = Indexable & {
 };
 
 export type TUser = Omit<DbUser, 'password'>;
+
+export type Login = Omit<DbUser, 'id' | 'role' | 'username'>;
