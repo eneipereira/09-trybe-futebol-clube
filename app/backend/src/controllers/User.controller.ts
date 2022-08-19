@@ -6,7 +6,7 @@ export default class UserController {
   static async login(req: Request, res: Response) {
     const body = await UserService.validateBodyLogin(req.body);
 
-    const user = await UserService.findOne(body.email);
+    const user = await UserService.getByEmail(body.email);
 
     const token = await UserService.makeToken(user);
 

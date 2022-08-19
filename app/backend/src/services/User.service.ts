@@ -3,6 +3,7 @@ import Joi = require('joi');
 import { Login, TUser } from '../types';
 import User from '../database/models/User.model';
 import runSchema from './runSchema';
+import UserNotFound from '../errors/UserNotFound';
 
 const secret = process.env.JWT_SECRET || 'jwt_secret';
 
@@ -32,11 +33,13 @@ export default class UserService {
     return token;
   }
 
-  static async findOne(email: string): Promise<TUser> {
+  static async getByEmail(email: string): Promise<TUser> {
     const user = await User.findOne({
       where: { email },
       raw: true,
     }) as User;
+
+    if (!user) throw new UserNotFound();
 
     const { password, ...userData } = user;
 
