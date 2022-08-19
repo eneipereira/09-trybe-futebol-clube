@@ -5,7 +5,7 @@ import * as chai from 'chai';
 import chaiHttp = require('chai-http');
 import { app } from '../app';
 import User from '../database/models/User.model'
-import { bodyUser, mockDbUser } from './mocks/dbUser';
+import { bodyUser, invalidBodyEmail, mockDbUser } from './mocks/dbUser';
 
 
 chai.use(chaiHttp)
@@ -26,13 +26,32 @@ describe('routes/Login', () => {
       expect(res.body).to.contain.keys('token');
     })
 
-    it('deve retornar 400 caso o login não contenha o campo email', async () => {
+    it('deve retornar 400 caso o body seja inválido (sem email)', async () => {
       const res = await chai.request(app)
         .post('/login')
         .send({password: bodyUser.password})
 
       expect(res.status).to.deep.equal(400);
       expect(res.body).to.have.property('message', 'All fields must be filled');
+    })
+
+    it('deve retornar 400 caso o body seja inválido (sem password)', async () => {
+      const res = await chai.request(app)
+        .post('/login')
+        .send({email: bodyUser.email})
+
+      expect(res.status).to.deep.equal(400);
+      expect(res.body).to.have.property('message', 'All fields must be filled');
+    })
+
+    it('deve retornar 401 caso não encontre o usuário', async () => {
+      sinon.stub(User, 'findOne').resolves()
+      const res = await chai.request(app)
+        .post('/login')
+        .send(invalidBodyEmail)
+
+      expect(res.status).to.deep.equal(401)
+      expect(res.body).to.have.property('message', 'Incorrect email or password')
     })
   })
 })

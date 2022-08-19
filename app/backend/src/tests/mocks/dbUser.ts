@@ -7,3 +7,8 @@ export const bodyUser = {
   email: 'admin@admin.com',
   password: 'secret_admin'
 }
+
+export const invalidBodyEmail = {
+  email: 'emailinvalido@invalido.com',
+  password: 'secret_admin'
+}
