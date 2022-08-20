@@ -8,4 +8,12 @@ export default class TeamController {
 
     res.status(StatusCodes.OK).json(teams);
   }
+
+  static async getById(req: Request, res: Response) {
+    const { id } = await TeamService.validateParamsId(req.params);
+
+    const team = await TeamService.getById(id);
+
+    res.status(StatusCodes.OK).json(team);
+  }
 }

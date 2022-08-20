@@ -6,4 +6,7 @@ const teamRoute = Router();
 teamRoute.route('/')
   .get(TeamController.getAll);
 
+teamRoute.route('/:id')
+  .get(TeamController.getById);
+
 export default teamRoute;
