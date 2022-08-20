@@ -16,3 +16,21 @@ export type Login = Omit<DbUser, 'id' | 'role' | 'username'>;
 export type DbTeam = Indexable & {
   teamName: string
 };
+
+export type DbMatch = Indexable & {
+  homeTeam: number;
+  homeTeamGoals: number;
+  awayTeam: number;
+  awayTeamGoals: number;
+  inProgress: boolean;
+};
+
+export type FullMatch = DbMatch & {
+  teamHome: {
+    teamName: string
+  };
+
+  teamAway: {
+    teamName: string
+  }
+};
