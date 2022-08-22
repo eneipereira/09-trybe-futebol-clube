@@ -10,4 +10,7 @@ matchRoute.route('/')
 matchRoute.route('/:id/finish')
   .patch(MatchController.finish);
 
+matchRoute.route('/:id')
+  .patch(MatchController.edit);
+
 export default matchRoute;

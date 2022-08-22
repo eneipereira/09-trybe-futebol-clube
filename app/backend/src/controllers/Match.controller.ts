@@ -34,4 +34,14 @@ export default class MatchController {
 
     res.status(StatusCodes.OK).json({ message: 'Finished' });
   }
+
+  static async edit(req: Request, res: Response) {
+    const { id } = await MatchService.validateParamsId(req.params);
+
+    const body = await MatchService.validateBodyEdit(req.body);
+
+    const updatedScore = await MatchService.edit(id, body);
+
+    res.status(StatusCodes.OK).json({ newScore: updatedScore });
+  }
 }

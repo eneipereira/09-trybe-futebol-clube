@@ -26,3 +26,7 @@ export type DbMatch = Indexable & {
 };
 
 export type NewMatch = Omit<DbMatch, keyof Indexable | 'inProgress'>;
+
+export type UpdatedMatch = NewMatch;
+
+export type NewScores = Pick<DbMatch, 'homeTeamGoals' | 'awayTeamGoals'>;

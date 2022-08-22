@@ -1,5 +1,5 @@
 import Joi = require('joi');
-import { NewMatch, DbMatch, Indexable } from '../types';
+import { NewMatch, DbMatch, Indexable, UpdatedMatch, NewScores } from '../types';
 import Team from '../database/models/Team.model';
 import Match from '../database/models/Match.model';
 import runSchema from './runSchema';
@@ -11,6 +11,15 @@ export default class MatchService {
     const result = runSchema(Joi.object<Indexable>({
       id: Joi.number().required().positive().integer(),
     }))(params);
+
+    return result;
+  }
+
+  static async validateBodyEdit(body: NewScores): Promise<NewScores> {
+    const result = runSchema(Joi.object<NewScores>({
+      homeTeamGoals: Joi.number().required().integer().positive(),
+      awayTeamGoals: Joi.number().required().integer().positive(),
+    }))(body);
 
     return result;
   }
@@ -62,5 +71,25 @@ export default class MatchService {
 
   static async finish(id: number): Promise<void> {
     await Match.update({ inProgress: false }, { where: { id } });
+  }
+
+  static async edit(id: number, newScores: NewScores): Promise<UpdatedMatch> {
+    const isValidMatch = await Match.findOne({
+      where: { id },
+    });
+
+    if (!isValidMatch) throw new NotFoundError('Match not found!');
+
+    if (!isValidMatch.inProgress) {
+      throw new UnauthorizedError('Can\'t update finished matches');
+    }
+
+    await Match.update(newScores, { where: { id } });
+
+    const updatedMatch = await Match.findOne({
+      where: { id },
+    });
+
+    return updatedMatch as unknown as UpdatedMatch;
   }
 }
