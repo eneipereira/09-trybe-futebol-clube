@@ -4,6 +4,7 @@ import Team from '../database/models/Team.model';
 import Match from '../database/models/Match.model';
 import runSchema from './runSchema';
 import UnauthorizedError from '../errors/UnauthorizedError';
+import NotFoundError from '../errors/NotFoundError';
 
 export default class MatchService {
   static async validateParamsId(params: unknown): Promise<Indexable> {
@@ -39,6 +40,13 @@ export default class MatchService {
 
   static async add(body: NewMatch): Promise<DbMatch> {
     const { homeTeam, awayTeam } = body;
+
+    const [isValidHome, isValidAway] = await Promise.all([
+      Team.findOne({ where: { id: homeTeam } }),
+      Team.findOne({ where: { id: awayTeam } }),
+    ]);
+
+    if (!isValidHome || !isValidAway) throw new NotFoundError('There is no team with such id!');
 
     if (homeTeam === awayTeam) {
       throw new UnauthorizedError('It is not possible to create a match with two equal teams');
