@@ -3,6 +3,7 @@ import { NewMatch, DbMatch, Indexable } from '../types';
 import Team from '../database/models/Team.model';
 import Match from '../database/models/Match.model';
 import runSchema from './runSchema';
+import UnauthorizedError from '../errors/UnauthorizedError';
 
 export default class MatchService {
   static async validateParamsId(params: unknown): Promise<Indexable> {
@@ -37,6 +38,12 @@ export default class MatchService {
   }
 
   static async add(body: NewMatch): Promise<DbMatch> {
+    const { homeTeam, awayTeam } = body;
+
+    if (homeTeam === awayTeam) {
+      throw new UnauthorizedError('It is not possible to create a match with two equal teams');
+    }
+
     const newMatch = await Match.create({
       ...body,
       inProgress: true,
