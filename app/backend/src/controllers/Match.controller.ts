@@ -1,5 +1,6 @@
 import { Request, Response } from 'express';
 import { StatusCodes } from 'http-status-codes';
+import UserService from '../services/User.service';
 import MatchService from '../services/Match.service';
 
 export default class MatchController {
@@ -16,5 +17,13 @@ export default class MatchController {
     const matches = await MatchService.getAll();
 
     res.status(StatusCodes.OK).json(matches);
+  }
+
+  static async add(req: Request, res: Response) {
+    await UserService.readToken(req.headers.authorization);
+
+    const newMatch = await MatchService.add(req.body);
+
+    res.status(StatusCodes.CREATED).json(newMatch);
   }
 }

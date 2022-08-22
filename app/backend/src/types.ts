@@ -25,12 +25,4 @@ export type DbMatch = Indexable & {
   inProgress: boolean;
 };
 
-export type FullMatch = DbMatch & {
-  teamHome: {
-    teamName: string
-  };
-
-  teamAway: {
-    teamName: string
-  }
-};
+export type NewMatch = Omit<DbMatch, keyof Indexable | 'inProgress'>;
