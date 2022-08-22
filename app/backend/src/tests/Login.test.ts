@@ -6,6 +6,7 @@ import chaiHttp = require('chai-http');
 import { app } from '../app';
 import User from '../database/models/User.model'
 import { bodyUser, invalidBodyEmail, invalidBodyPass, mockDbUser } from './mocks/dbUser';
+import { StatusCodes } from 'http-status-codes';
 
 
 chai.use(chaiHttp)
@@ -22,7 +23,7 @@ describe('routes/Login', () => {
         .post('/login')
         .send(bodyUser);
 
-      expect(res.status).to.deep.equal(200);
+      expect(res.status).to.deep.equal(StatusCodes.OK);
       expect(res.body).to.contain.keys('token');
     })
 
@@ -31,7 +32,7 @@ describe('routes/Login', () => {
         .post('/login')
         .send({password: bodyUser.password})
 
-      expect(res.status).to.deep.equal(400);
+      expect(res.status).to.deep.equal(StatusCodes.BAD_REQUEST);
       expect(res.body).to.have.property('message', 'All fields must be filled');
     })
 
@@ -40,7 +41,7 @@ describe('routes/Login', () => {
         .post('/login')
         .send({email: bodyUser.email})
 
-      expect(res.status).to.deep.equal(400);
+      expect(res.status).to.deep.equal(StatusCodes.BAD_REQUEST);
       expect(res.body).to.have.property('message', 'All fields must be filled');
     })
 
@@ -50,7 +51,7 @@ describe('routes/Login', () => {
         .post('/login')
         .send(invalidBodyEmail)
 
-      expect(res.status).to.deep.equal(401)
+      expect(res.status).to.deep.equal(StatusCodes.UNAUTHORIZED)
       expect(res.body).to.have.property('message', 'Incorrect email or password')
     })
 
@@ -60,7 +61,7 @@ describe('routes/Login', () => {
         .post('/login')
         .send(invalidBodyPass)
 
-      expect(res.status).to.deep.equal(401)
+      expect(res.status).to.deep.equal(StatusCodes.UNAUTHORIZED)
       expect(res.body).to.have.property('message', 'Incorrect email or password')
     })
 
@@ -74,7 +75,7 @@ describe('routes/Login', () => {
         .get('/login/validate')
         .set({'Authorization': token})
 
-      expect(res.status).to.deep.equal(200)
+      expect(res.status).to.deep.equal(StatusCodes.OK)
       expect(res.body).to.contain.keys('role')
     })
   })

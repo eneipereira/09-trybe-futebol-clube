@@ -1,4 +1,5 @@
 import { Request, Response } from 'express';
+import { StatusCodes } from 'http-status-codes';
 import MatchService from '../services/Match.service';
 
 export default class MatchController {
@@ -8,12 +9,12 @@ export default class MatchController {
     if (inProgress?.length) {
       const matches = await MatchService.getByQuery(inProgress === 'true');
 
-      res.status(200).json(matches);
+      res.status(StatusCodes.OK).json(matches);
       return;
     }
 
     const matches = await MatchService.getAll();
 
-    res.status(200).json(matches);
+    res.status(StatusCodes.OK).json(matches);
   }
 }

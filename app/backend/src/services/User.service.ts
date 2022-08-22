@@ -34,12 +34,12 @@ export default class UserService {
 
   static async readToken(token: string | undefined): Promise<DbUser> {
     if (!token) {
-      throw new JsonWebTokenError('Token not found');
+      throw new JsonWebTokenError('Token must be a valid token');
     }
 
     const payload = verify(token, secret, (err, decoded) => {
       if (err && (err.message.includes('invalid') || err.message.includes('malformed'))) {
-        throw new JsonWebTokenError('Invalid token');
+        throw new JsonWebTokenError('Token must be a valid token');
       }
       return decoded;
     });

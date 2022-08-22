@@ -6,6 +6,7 @@ import chaiHttp = require('chai-http');
 import { app } from '../app';
 import Team from '../database/models/Team.model'
 import { mockDbTeam } from './mocks/dbTeam';
+import { StatusCodes } from 'http-status-codes';
 
 chai.use(chaiHttp)
 
@@ -21,7 +22,7 @@ describe('routes/Team', () => {
       const res = await chai.request(app)
         .get('/teams')
 
-      expect(res.status).to.deep.equal(200)
+      expect(res.status).to.deep.equal(StatusCodes.OK)
       expect(res.body).to.be.an('array')
       expect(res.body[0]).to.deep.equal(mockDbTeam[0])
     })
@@ -34,7 +35,7 @@ describe('routes/Team', () => {
       const res = await chai.request(app)
         .get('/teams/10')
 
-    expect(res.status).to.deep.equal(200)
+    expect(res.status).to.deep.equal(StatusCodes.OK)
     expect(res.body).to.deep.equal(mockDbTeam[9])
     })
 
@@ -44,7 +45,7 @@ describe('routes/Team', () => {
       const res = await chai.request(app)
         .get('/teams/100')
 
-    expect(res.status).to.deep.equal(404)
+    expect(res.status).to.deep.equal(StatusCodes.NOT_FOUND)
     expect(res.body).to.have.property('message', 'Team not found')
     })
   })
