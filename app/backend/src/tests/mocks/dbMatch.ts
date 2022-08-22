@@ -384,3 +384,38 @@ export const mockDbMatch = [
     inProgress: true,
   }
 ]
+
+export const bodyMatch = {
+  "homeTeam": 16,
+  "homeTeamGoals": 2,
+  "awayTeam": 8,
+  "awayTeamGoals": 2
+}
+
+export const insertedMatch = {
+  "id": 49,
+  "homeTeam": 16,
+  "homeTeamGoals": 2,
+  "awayTeam": 8,
+  "awayTeamGoals": 2,
+  "inProgress": true,
+}
+
+export const sameTeamMatch = {
+  "homeTeam": 16,
+  "homeTeamGoals": 2,
+  "awayTeam": 16,
+  "awayTeamGoals": 2
+}
+
+export const invalidTeamMatch = {
+  "homeTeam": 999,
+  "homeTeamGoals": 2,
+  "awayTeam": 6,
+  "awayTeamGoals": 4
+}
+
+export const scoreToUpdate = {
+  "homeTeamGoals": 2,
+  "awayTeamGoals": 6
+}

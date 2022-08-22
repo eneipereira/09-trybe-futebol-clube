@@ -19,3 +19,5 @@ export const invalidBodyPass = {
   email: 'admin@admin.com',
   password: 'senha_invalida'
 }
+
+export const invalidToken = 'eyJhbGciOiJIUR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpJVadQssw5c'
