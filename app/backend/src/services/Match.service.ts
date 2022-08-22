@@ -44,4 +44,8 @@ export default class MatchService {
 
     return newMatch as DbMatch;
   }
+
+  static async finish(id: number): Promise<void> {
+    await Match.update({ inProgress: false }, { where: { id } });
+  }
 }

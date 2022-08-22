@@ -7,4 +7,7 @@ matchRoute.route('/')
   .get(MatchController.getAll)
   .post(MatchController.add);
 
+matchRoute.route('/:id/finish')
+  .patch(MatchController.finish);
+
 export default matchRoute;
