@@ -1,5 +1,5 @@
 import Joi = require('joi');
-import { NewMatch, DbMatch, Indexable, UpdatedMatch, NewScores } from '../types';
+import { NewMatch, DbMatch, Indexable, UpdatedMatch, NewScores, FullMatch } from '../types';
 import Team from '../database/models/Team.model';
 import Match from '../database/models/Match.model';
 import runSchema from './runSchema';
@@ -35,13 +35,22 @@ export default class MatchService {
     return matches;
   }
 
-  static async getByQuery(inProgress: boolean) {
+  static async getByQuery(inProgress: boolean): Promise<FullMatch[]> {
     const matches = await Match.findAll({
       where: { inProgress },
       include: [
         { model: Team, as: 'teamHome', attributes: ['teamName'] },
         { model: Team, as: 'teamAway', attributes: ['teamName'] },
       ],
+    });
+
+    return matches as unknown as FullMatch[];
+  }
+
+  static async getFinished(id: number, type: string): Promise<DbMatch[]> {
+    const matches = await Match.findAll({
+      where: { [type]: id, inProgress: false },
+      raw: true,
     });
 
     return matches;

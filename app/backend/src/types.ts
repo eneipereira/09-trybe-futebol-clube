@@ -25,8 +25,34 @@ export type DbMatch = Indexable & {
   inProgress: boolean;
 };
 
+export type FullMatch = DbMatch & {
+  teamHome: {
+    teamName: string
+  },
+  teamAway: {
+    teamName: string
+  }
+};
+
 export type NewMatch = Omit<DbMatch, keyof Indexable | 'inProgress'>;
 
 export type UpdatedMatch = NewMatch;
 
 export type NewScores = Pick<DbMatch, 'homeTeamGoals' | 'awayTeamGoals'>;
+
+export type Leaderboard = {
+  name: string;
+  totalPoints: number;
+  totalGames: number;
+  totalVictories: number;
+  totalDraws: number;
+  totalLosses: number;
+  goalsFavor: number;
+  goalsOwn: number;
+  goalsBalance: number;
+  efficiency: string;
+};
+
+export type Stats = Pick<Leaderboard, 'totalVictories' | 'totalDraws' | 'totalLosses'>;
+
+export type TeamType = ['homeTeamGoals', 'awayTeamGoals'] | ['awayTeamGoals', 'homeTeamGoals'];
