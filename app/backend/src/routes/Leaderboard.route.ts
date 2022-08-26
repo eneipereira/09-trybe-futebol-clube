@@ -6,4 +6,7 @@ const leaderboardRoute = Router();
 leaderboardRoute.route('/home')
   .get(LeaderboardController.getHome);
 
+leaderboardRoute.route('/away')
+  .get(LeaderboardController.getAway);
+
 export default leaderboardRoute;

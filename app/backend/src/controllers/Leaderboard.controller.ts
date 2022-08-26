@@ -8,4 +8,10 @@ export default class LeaderboardController {
 
     res.status(StatusCodes.OK).json(homeRanking);
   }
+
+  static async getAway(_req: Request, res: Response) {
+    const awayRanking = await LeaderboardService.getAway();
+
+    res.status(StatusCodes.OK).json(awayRanking);
+  }
 }

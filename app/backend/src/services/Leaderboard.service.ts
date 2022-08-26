@@ -47,4 +47,11 @@ export default class LeaderboardService {
 
     return sortedHome;
   }
+
+  static async getAway() {
+    const awayBoard = await LeaderboardService.create('awayTeam');
+    const sortedAway = await LeaderboardService.sort(awayBoard);
+
+    return sortedAway;
+  }
 }
