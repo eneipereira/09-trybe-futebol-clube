@@ -31,6 +31,28 @@ export default class LeaderboardService {
     return leaderboard;
   }
 
+  private static async groupCreate(home: Leaderboard[], away: Leaderboard[]):
+  Promise<Leaderboard[]> {
+    const group = home.map((h, index) => {
+      const board = {
+        name: h.name,
+        totalPoints: h.totalPoints + away[index].totalPoints,
+        totalGames: h.totalGames + away[index].totalGames,
+        totalVictories: h.totalVictories + away[index].totalVictories,
+        totalDraws: h.totalDraws + away[index].totalDraws,
+        totalLosses: h.totalLosses + away[index].totalLosses,
+        goalsFavor: h.goalsFavor + away[index].goalsFavor,
+        goalsOwn: h.goalsOwn + away[index].goalsOwn,
+        goalsBalance: h.goalsBalance + away[index].goalsBalance,
+        efficiency: '',
+      };
+      board.efficiency = (((board.totalPoints / (board.totalGames * 3)) * 100)).toFixed(2);
+
+      return board;
+    });
+    return group;
+  }
+
   private static async sort(leaderboard: Leaderboard[]): Promise<Leaderboard[]> {
     const board = leaderboard.sort((a, b) => b.totalPoints - a.totalPoints
     || b.totalVictories - a.totalVictories
@@ -53,5 +75,15 @@ export default class LeaderboardService {
     const sortedAway = await LeaderboardService.sort(awayBoard);
 
     return sortedAway;
+  }
+
+  static async getAll() {
+    const homeBoard = await LeaderboardService.create('homeTeam');
+    const awayBoard = await LeaderboardService.create('awayTeam');
+    const groupedBoard = await LeaderboardService.groupCreate(homeBoard, awayBoard);
+
+    const sortedGroup = await LeaderboardService.sort(groupedBoard);
+
+    return sortedGroup;
   }
 }

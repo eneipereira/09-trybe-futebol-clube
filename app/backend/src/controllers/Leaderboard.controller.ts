@@ -14,4 +14,10 @@ export default class LeaderboardController {
 
     res.status(StatusCodes.OK).json(awayRanking);
   }
+
+  static async getAll(_req: Request, res: Response) {
+    const allRanking = await LeaderboardService.getAll();
+
+    res.status(StatusCodes.OK).json(allRanking);
+  }
 }
